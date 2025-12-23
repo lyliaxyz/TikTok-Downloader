@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TikTok Downloader</title>
+
+  <link rel="manifest" href="/manifest.json">
+
+  <style>
+    /* === STYLE KAMU TETAP === */
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg,#667eea,#764ba2,#f093fb);
+      font-family: Segoe UI, sans-serif;
+    }
+    .card {
+      background: rgba(255,255,255,.15);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 32px;
+      width: 100%;
+      max-width: 420px;
+      color: #fff;
+    }
+    input, button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 12px;
+      border-radius: 12px;
+      border: none;
+      font-size: 15px;
+    }
+    button {
+      background: linear-gradient(135deg,#ff6b6b,#ee5a6f);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .hidden { display: none }
+    video {
+      width: 100%;
+      border-radius: 16px;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- LOGIN -->
+  <div id="login">
+    <h2>🎵 TikTok Downloader</h2>
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">Masuk</button>
+    <p id="loginErr" class="hidden">Login gagal</p>
+  </div>
+
+  <!-- APP -->
+  <div id="app" class="hidden">
+    <p>Selamat datang, <b id="user"></b></p>
+
+    <input id="url" placeholder="Link TikTok">
+    <button onclick="download()">Unduh Video</button>
+
+    <video id="video" controls class="hidden"></video>
+    <button id="dlBtn" class="hidden">⬇ Download Video</button>
+
+    <button onclick="logout()">Logout</button>
+  </div>
+
+</div>
+
+<script>
+let TOKEN = null;
+
+async function login() {
+  const res = await fetch("/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: username.value,
+      password: password.value
+    })
+  });
+
+  const data = await res.json();
+  if (!data.success) return loginErr.classList.remove("hidden");
+
+  TOKEN = data.token;
+  user.innerText = username.value;
+  login.classList.add("hidden");
+  app.classList.remove("hidden");
+}
+
+async function download() {
+  const res = await fetch("/api/download", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + TOKEN
+    },
+    body: JSON.stringify({ url: url.value })
+  });
+
+  const data = await res.json();
+  const videoUrl = data.result.video_nowm;
+
+  video.src = videoUrl;
+  video.classList.remove("hidden");
+
+  dlBtn.classList.remove("hidden");
+  dlBtn.onclick = () => {
+    const a = document.createElement("a");
+    a.href = videoUrl;
+    a.download = "tiktok-video.mp4";
+    a.click();
+  };
+}
+
+function logout() {
+  location.reload();
+}
+</script>
+
+</body>
+</html>
