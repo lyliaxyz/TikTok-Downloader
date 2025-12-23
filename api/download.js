@@ -2,21 +2,21 @@ const fetch = require("node-fetch");
 const jwt = require("jsonwebtoken");
 
 const JWT_SECRET = "yagami23";
-
-// LIMIT MEMORY (reset otomatis saat redeploy / 24 jam)
 const usage = {};
 
 module.exports = async (req, res) => {
-  if (req.method !== "POST") return res.status(405).end();
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method Not Allowed" });
+  }
 
   const auth = req.headers.authorization;
-  if (!auth) return res.status(401).end();
+  if (!auth) return res.status(401).json({ message: "No token" });
 
   let payload;
   try {
     payload = jwt.verify(auth.split(" ")[1], JWT_SECRET);
   } catch {
-    return res.status(403).end();
+    return res.status(403).json({ message: "Invalid token" });
   }
 
   const user = payload.username;
@@ -25,11 +25,12 @@ module.exports = async (req, res) => {
   if (usage[user] >= payload.limit) {
     return res.status(429).json({
       status: false,
-      message: "Limit harian habis, coba lagi besok"
+      message: "Limit harian habis"
     });
   }
 
-  const { url } = req.body;
+  const { url } = req.body || {};
+  if (!url) return res.status(400).json({ message: "URL kosong" });
 
   try {
     usage[user]++;
@@ -38,8 +39,8 @@ module.exports = async (req, res) => {
     const r = await fetch(api);
     const data = await r.json();
 
-    res.json(data);
-  } catch {
-    res.status(500).json({ status: false });
+    return res.status(200).json(data);
+  } catch (e) {
+    return res.status(500).json({ status: false });
   }
 };
