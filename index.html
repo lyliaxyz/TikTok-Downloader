@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TikTok Video Downloader</title>
+  <title>TikTok Video Downloader || Shin Yagami</title>
   <style>
     * {
       margin: 0;
@@ -310,7 +310,7 @@
     <div class="login-screen active" id="loginScreen">
       <div class="logo">🎵</div>
       <h1>TikTok Downloader</h1>
-      <p class="subtitle">Login untuk melanjutkan</p>
+      <p class="subtitle">Login Untuk Melanjutkan</p>
       
       <div class="form-group">
         <label>Username</label>
@@ -326,7 +326,7 @@
       
       <div class="error-msg" id="loginError">Username atau password salah!</div>
       
-      <div class="footer">Demo: user / pass123</div>
+      <div class="footer">Belum Punya Akun?Hubungi https://wa.me/6289630200229</div>
     </div>
 
     <!-- App Screen -->
@@ -342,7 +342,7 @@
       
       <div class="form-group">
         <label>Link TikTok</label>
-        <input type="text" id="tiktokUrl" placeholder="https://vm.tiktok.com/..." />
+        <input type="text" id="tiktokUrl" placeholder="https://vt.tiktok.com/..." />
       </div>
       
       <button onclick="downloadVideo()">🔽 Unduh Video</button>
@@ -361,7 +361,7 @@
 
       <button class="logout-btn" onclick="logout()">Logout</button>
 
-      <div class="footer">Powered by Lylia-Silence API</div>
+      <div class="footer">Powered by Shin Yagami</div>
     </div>
   </div>
 
@@ -369,10 +369,10 @@
     let currentUser = null;
 
     // Demo credentials
-    const users = {
-      'user': 'pass123',
-      'admin': 'admin123'
-    };
+    const users = [
+  { username: 'admin', password: 'yagami' },
+  { username: 'users', password: 'free125' }
+];
 
     function login() {
       const username = document.getElementById('username').value;
