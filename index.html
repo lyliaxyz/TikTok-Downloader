@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TikTok Video Downloader</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #1d2671, #c33764);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      color: #fff;
+    }
+    .card {
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 420px;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    p {
+      text-align: center;
+      opacity: 0.9;
+      font-size: 14px;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      margin-top: 16px;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      opacity: 0.85;
+    }
+    .result {
+      margin-top: 20px;
+      display: none;
+      text-align: center;
+    }
+    video {
+      width: 100%;
+      border-radius: 12px;
+      margin-top: 10px;
+    }
+    .download {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      background: #00e676;
+      color: #000;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎵 TikTok Downloader</h1>
+    <p>Unduh video TikTok tanpa watermark</p><input type="text" id="tiktokUrl" placeholder="Tempel link TikTok di sini" />
+<button onclick="downloadVideo()">Unduh Video</button>
+
+<div class="result" id="result">
+  <video id="video" controls></video>
+  <br />
+  <a id="downloadBtn" class="download" href="#" download>⬇ Download Video</a>
+</div>
+
+<div class="footer">Powered by Lylia-Silence API</div>
+
+  </div>  <script>
+    async function downloadVideo() {
+      const url = document.getElementById('tiktokUrl').value;
+      if (!url) {
+        alert('Masukkan link TikTok terlebih dahulu');
+        return;
+      }
+
+      const api = `https://api-lyliasilence.vercel.app/download/tiktok?apikey=xyz2025&url=${encodeURIComponent(url)}`;
+
+      try {
+        const res = await fetch(api);
+        const data = await res.json();
+
+        if (!data.status) {
+          alert('Gagal mengambil video');
+          return;
+        }
+
+        const videoUrl = data.result.video_nowm;
+        const video = document.getElementById('video');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        video.src = videoUrl;
+        downloadBtn.href = videoUrl;
+        document.getElementById('result').style.display = 'block';
+      } catch (err) {
+        alert('Terjadi kesalahan');
+        console.error(err);
+      }
+    }
+  </script></body>
+</html>
